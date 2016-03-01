@@ -25,8 +25,11 @@ export default class FileImport {
   constructor(app) {
     this.app = app
     this._parsers = {}
+    this._exporters = {}
     app.get('file-import').use(this)
       .gather('parser')
+      .gather('exporter')
+      .respond('export')
       .respond('import')
       .respond('importFile')
       .respond('importToModel')
@@ -45,6 +48,27 @@ export default class FileImport {
   parser(type, handler) {
     this._parsers[type] = handler
   }
+  /**
+   * Provide an exporter for a particular type (file extension)
+   * @param {string} type The type (e.g. 'html') this exporter creates
+   * @param {function} handler Function to receive (content, options) and return formatted output content
+   */
+  exporter(type, handler) {
+    this._exporters[type] = handler
+  }
+
+  /**
+   * Request formattted output based on type
+   * @param {string} type The type (e.g. 'html') of the output content
+   * @param {[object]} records The records to export
+   * @param {object} opts Options for the exporter context
+   * @return {Promise} String of formatted output
+   */
+  export(type, records, opts) {
+    if (opts === undefined) opts = {}
+    if(!this._exporters[type]) throw new Error('No matching exporter found: '+ type);
+    return this._exporters[type](records, opts);
+  }
 
   /**
    * Request parsed results based on type
@@ -54,6 +78,7 @@ export default class FileImport {
    * @return {Promise} Array of parsed result objects
    */
   import(type, content, opts) {
+    if (opts === undefined) opts = {}
     if(!this._parsers[type]) throw new Error('No matching parser found: '+ type);
     return this._postProcess(this._mappingNames(this._parsers[type](content, opts), opts), opts);
   }

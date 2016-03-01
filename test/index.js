@@ -5,8 +5,11 @@
 */
 
 'use strict';
+import _ from 'underscore'
 
 import Module from '../src/'
+import CSVParser from '../src/CSVParser'
+import CSVExporter from '../src/CSVExporter'
 
 import TestApp from '@nxus/core/lib/test/support/TestApp';
 
@@ -30,11 +33,47 @@ describe("Data Loader Module", () => {
     it("should gather parsers", () => {
       app.get().gather.calledWith('parser').should.be.true
     })
+    it("should gather exporters", () => {
+      app.get().gather.calledWith('exporter').should.be.true
+    })
     it("should respond for imports", () => {
       app.get().respond.calledWith('import').should.be.true
       app.get().respond.calledWith('importFile').should.be.true
       app.get().respond.calledWith('importToModel').should.be.true
       app.get().respond.calledWith('importFileToModel').should.be.true
+    })
+    it("should respond for exports", () => {
+      app.get().respond.calledWith('export').should.be.true
+    })
+    it("should register default handlers", () => {
+      app.get().provide.calledWith('parser', 'csv')
+      app.get().provide.calledWith('parser', 'tsv')
+      app.get().provide.calledWith('parser', 'geojson')
+      app.get().provide.calledWith('parser', 'arcjson')
+      app.get().provide.calledWith('exporter', 'csv')
+      app.get().provide.calledWith('exporter', 'tsv')
+    })
+  })
+
+  describe("CSV", () => {
+    beforeEach(() => {
+      let p = new CSVParser(app)
+      let e = new CSVExporter(app)
+      // workaround TestApp register
+      module.parser('csv', _.partial(p.parse, ','))
+      module.exporter('csv', _.partial(e.export, ','))
+    })
+    it("should parse", () => {
+      module.import("csv", "A,B,C,D\n1,2,3,4\n").then((objs) => {
+        objs.length.should.equal(1)
+        objs[0].should.have.property("A", "1")
+        objs[0].should.have.property("B", "2")
+      })
+    })
+    it("should export", () => {
+      module.export("csv", [{A: 1, B: 2, C: 3, D: 4}]).then((contents) => {
+        contents.should.equal( "A,B,C,D\n1,2,3,4\n")
+      })
     })
   })
 })

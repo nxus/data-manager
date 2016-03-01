@@ -25,6 +25,7 @@
     "babel-runtime": "^5.7.0",
     "bluebird": "^3.3.3",
     "csv-parse": "^1.0.2",
+    "csv-stringify": "^1.0.2",
     "terraformer-arcgis-parser": "^1.0.4",
     "underscore": "^1.8.3"
   },
