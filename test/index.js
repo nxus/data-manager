@@ -10,7 +10,7 @@ import Module from '../src/'
 
 import TestApp from '@nxus/core/lib/test/support/TestApp';
 
-describe("Module", () => {
+describe("Data Loader Module", () => {
   var module, app;
  
   beforeEach(() => {
@@ -22,8 +22,19 @@ describe("Module", () => {
     it("should not be null", () => Module.should.not.be.null)
 
     it("should be instantiated", () => {
-      module = new Module(app);
       module.should.not.be.null;
     });
   });
+
+  describe("events", () => {
+    it("should gather parsers", () => {
+      app.get().gather.calledWith('parser').should.be.true
+    })
+    it("should respond for imports", () => {
+      app.get().respond.calledWith('import').should.be.true
+      app.get().respond.calledWith('importFile').should.be.true
+      app.get().respond.calledWith('importToModel').should.be.true
+      app.get().respond.calledWith('importFileToModel').should.be.true
+    })
+  })
 })

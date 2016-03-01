@@ -1,7 +1,7 @@
 {
-  "name": "",
+  "name": "@nxus/data-loader",
   "version": "0.0.1",
-  "description": "",
+  "description": "Data format parsers and loaders for nxus",
   "main": "lib",
   "scripts": {
     "test": "NODE_ENV=test mocha --compilers js:babel/register -R spec",
@@ -13,27 +13,33 @@
   },
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "git+https://github.com/nxus/data-loader.git"
   },
-  "author": "",
+  "author": "loppear",
   "license": "MIT",
   "bugs": {
-    "url": ""
+    "url": "https://github.com/nxus/data-loader/issues"
   },
-  "homepage": "",
+  "homepage": "https://github.com/nxus/data-loader",
   "dependencies": {
-    "babel-runtime": "^5.7.0"
+    "babel-runtime": "^5.7.0",
+    "bluebird": "^3.3.3",
+    "csv-parse": "^1.0.2",
+    "terraformer-arcgis-parser": "^1.0.4",
+    "underscore": "^1.8.3"
   },
   "peerDependencies": {
-    "@nxus/core": "^2.2.0"
+    "@nxus/core": "^2.4.0-0",
+    "@nxus/storage": "^2.4.0-0",
+    "@nxus/admin-ui": "^2.4.0-0"
   },
   "devDependencies": {
-    "@nxus/core": "^2.3.0",
+    "@nxus/core": "^2.4.0-0",
     "babel": "^5.6.23",
-    "mocha": "^2.2.5",
-    "should": "^7.0.2",
-    "sinon": "^1.17.2",
     "chai": "^3.5.0",
-    "chai-as-promised": "^5.2.0"
+    "chai-as-promised": "^5.2.0",
+    "mocha": "^2.4.5",
+    "should": "^7.0.2",
+    "sinon": "^1.17.2"
   }
 }
