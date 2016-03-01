@@ -1,19 +1,8 @@
-# Nxus Module
+# Nxus Data-Loader Module
 
-Your Introduction Goes Here.
+A module for loading data into a Nxus application
 
 ## Installation
 
-    > npm install <modulename> --save
+    > npm install @nxus/data-loader --save
 
-## Usage
-
-Your Install Instructions Go Here
-
-## API
-
-### Module
-
-[src/index.js:12-16](https://github.com/nxus/module-template/blob/b84a1e5ed9b5267ef537ea2235cb9af75d44a3d8/src/index.js#L12-L16 "Source code on GitHub")
-
-The Base Nxus Module
