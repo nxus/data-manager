@@ -38,6 +38,7 @@ export default class FileImport {
     new CSVParser(app)
     new ArcJSONParser(app)
     new GeoJSONParser(app)
+
   }
 
   /**
