@@ -2,7 +2,7 @@ import _ from 'underscore'
 
 export default class GeoJSON {
   constructor(app) {
-    app.get('file-import').parser('geojson', this.parse.bind(this))
+    app.get('data-loader').parser('geojson', this.parse.bind(this))
   }
 
   parse(contents, opts) {

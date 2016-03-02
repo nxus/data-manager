@@ -5,8 +5,8 @@ import _ from 'underscore'
 
 export default class CSVParser {
   constructor(app) {
-    app.get('file-import').parser('csv', _.partial(this.parse, ',').bind(this))
-    app.get('file-import').parser('tsv', _.partial(this.parse, '\t').bind(this))
+    app.get('data-loader').parser('csv', _.partial(this.parse, ',').bind(this))
+    app.get('data-loader').parser('tsv', _.partial(this.parse, '\t').bind(this))
 
   }
 

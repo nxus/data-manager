@@ -26,7 +26,7 @@ export default class FileImport {
     this.app = app
     this._parsers = {}
     this._exporters = {}
-    app.get('file-import').use(this)
+    app.get('data-loader').use(this)
       .gather('parser')
       .gather('exporter')
       .respond('export')

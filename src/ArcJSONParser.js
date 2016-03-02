@@ -4,7 +4,7 @@ import ArcGIS from 'terraformer-arcgis-parser'
 
 export default class ArcJSON {
   constructor(app) {
-    app.get('file-import').parser('arcjson', this.parse.bind(this))
+    app.get('data-loader').parser('arcjson', this.parse.bind(this))
   }
 
   parse(contents, opts) {
