@@ -4,6 +4,7 @@ import Promise from 'bluebird'
 import fs from 'fs'
 import path from 'path'
 import _ from 'underscore'
+import multer from 'multer';
 
 Promise.promisifyAll(fs)
 
@@ -48,6 +49,7 @@ export default class DataLoader {
     app.get('data-loader').use(this)
       .gather('parser')
       .gather('exporter')
+      .gather('uploadPath')
       .respond('export')
       .respond('import')
       .respond('importFile')
@@ -66,6 +68,8 @@ export default class DataLoader {
    * @param {function} handler Function to receive (content, options) and return parsed array of result objects
    */
   parser(type, handler) {
+    this.on('records.'+type, (args) => {return args})
+    this.on('record.'+type, (args) => {return args})
     this._parsers[type] = handler
   }
   /**
@@ -77,6 +81,11 @@ export default class DataLoader {
     this._exporters[type] = handler
   }
 
+  uploadPath(path, field, dest=process.cwd()+'/uploads/') {
+    var upload = multer({dest: dest})
+    this.app.get('router').middleware(path, upload.single(field))
+  }
+  
   /**
    * Request formattted output based on type
    * @param {string} type The type (e.g. 'html') of the output content
@@ -151,6 +160,8 @@ export default class DataLoader {
   // Internal
   
   _modelImport(model_id, results, opts) {
+    this.on('models.'+model_id, (args) => {return args})
+    this.on('model.'+model_id, (args) => {return args})
     if (opts === undefined) opts = {}
     var identityFields = opts.identityFields || ['id']
     return Promise.mapSeries(results, (record) => { return this.emit('model.'+model_id, record)}).then((records) => {
