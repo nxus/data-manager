@@ -59,7 +59,7 @@ describe("Data Loader Module", () => {
     beforeEach(() => {
       let p = new CSVParser(app)
       let e = new CSVExporter(app)
-      // workaround TestApp register
+      // workaround TestApp register and events
       module.parser('csv', _.partial(p.parse, ','))
       module.exporter('csv', _.partial(e.export, ','))
     })
@@ -74,6 +74,22 @@ describe("Data Loader Module", () => {
       module.export("csv", [{A: 1, B: 2, C: 3, D: 4}]).then((contents) => {
         contents.should.equal( "A,B,C,D\n1,2,3,4\n")
       })
+    })
+    it("should emit records events", () => {
+      return module.import("csv", "A,B,C,D\n1,2,3,4\n").then((objs) => {
+        app.get('data-loader').emit.calledWith('records.csv').should.be.true
+        app.get('data-loader').emit.calledWith('record.csv').should.be.true
+      })
+    })
+    it("should emit model events", (done) => {
+      // Can't actually use promise because storage does not return
+      module._modelImport("test_model", [{a:1}], {})
+      setTimeout(() => {
+        app.get('data-loader').emit.calledWith('models.test_model').should.be.true
+        app.get('data-loader').emit.calledWith('model.test_model').should.be.true
+        app.get('storage').provide.calledWith('getModel', 'test_model').should.be.true
+        done()
+      }, 100)
     })
   })
 })

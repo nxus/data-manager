@@ -19,7 +19,7 @@ export default class CSVParser {
           return
         }
         var header = data.shift();
-        results = _.map(data, (row) => {
+        let results = _.map(data, (row) => {
           return _.object(header, row)
         })
         resolve(results)

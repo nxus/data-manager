@@ -14,14 +14,33 @@ import GeoJSONParser from './GeoJSONParser'
 /**
  * Import file contents as arrays of objects
  * 
+ * ## Installation
+ *
+ *    > npm install @nxus/data-loader --save
+ *
+ * ## Options
+ *
  * All responses accept an options argument, in addition to any parser-specific options
  * you can indicate:
  *  * `mapping`: object of {field: newField} name mappings
- *  * `postProcess`: handler (that can return a promise) to postprocess each
  *  * `identityFields`: for importing to models, array of fields to be used for createOrUpdate query
+ *
+ * ## Events
+ *
+ * You can modify the records during import with the following specific events:
+ *  * `records.type`: e.g. `app.get('data-loader').after('records.csv', (results) => {})`
+ *  * `record.type`: e.g. `app.get('data-loader).after('record.csv', (one) => {})`
+ *  * `models.identity`: e.g. `app.get('data-loader').after('models.user', (results) => {})`
+ *  * `model.identity`: e.g. `app.get('data-loader).after('model.user', (user) => {})`
+ *
+ * record* events occur after parsing and name mapping
+ * model* events occur after record events and before models are created/updated.
+ *
+ * # API
+ * -----
  */
 
-export default class FileImport {
+export default class DataLoader {
   constructor(app) {
     this.app = app
     this._parsers = {}
@@ -81,7 +100,8 @@ export default class FileImport {
   import(type, content, opts) {
     if (opts === undefined) opts = {}
     if(!this._parsers[type]) throw new Error('No matching parser found: '+ type);
-    return this._postProcess(this._mappingNames(this._parsers[type](content, opts), opts), opts);
+    let records = Promise.mapSeries(this._mappingNames(this._parsers[type](content, opts), opts), (record) => { return this.emit('record.'+type, record)})
+    return this.emit('records.'+type, records)
   }
 
   /**
@@ -130,14 +150,19 @@ export default class FileImport {
 
   // Internal
   
-  _modelImport(model_id, results, options) {
-    var identityFields = options.identityFields || ['id']
-    return this.app.get('storage').getModel(model_id).then((model) => {
-      var model_attrs = _.keys(model._attributes)
-      return Promise.map(results, (r) => {
-        var values = _.pick(r, ...model_attrs)
-        var criteria = _.pick(values, ...identityFields)
-        return model.createOrUpdate(criteria, values)
+  _modelImport(model_id, results, opts) {
+    if (opts === undefined) opts = {}
+    var identityFields = opts.identityFields || ['id']
+    return Promise.mapSeries(results, (record) => { return this.emit('model.'+model_id, record)}).then((records) => {
+      return this.emit('models.'+model_id, records).then((results) => {
+        return this.app.get('storage').getModel(model_id).then((model) => {
+          var model_attrs = _.keys(model._attributes)
+          return Promise.map(results, (r) => {
+            var values = _.pick(r, ...model_attrs)
+            var criteria = _.pick(values, ...identityFields)
+            return model.createOrUpdate(criteria, values)
+          })
+        })
       })
     })
   }
@@ -156,10 +181,4 @@ export default class FileImport {
     })
   }
 
-  _postProcess(results, options) {
-    if (options.postProcess === undefined) {
-      return results
-    }
-    return Promise.mapSeries(results, options.postProcess)
-  }
 }
