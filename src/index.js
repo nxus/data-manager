@@ -171,7 +171,7 @@ export default class DataLoader {
           return Promise.map(results, (r) => {
             var values = _.pick(r, ...model_attrs)
             var criteria = _.pick(values, ...identityFields)
-            return model.createOrUpdate(criteria, values)
+            return model.createOrUpdate(criteria, values).catch((e) => {this.app.log.error("Error imporing "+model_id, e)})
           })
         })
       })
