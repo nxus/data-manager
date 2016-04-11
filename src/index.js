@@ -169,20 +169,29 @@ export default class DataLoader {
     this.on('models.'+model_id, (args) => {return args})
     this.on('model.'+model_id, (args) => {return args})
     if (opts === undefined) opts = _defaultImportOptions
-    var identityFields = opts.identityFields || ['id']
+
     return Promise.mapSeries(results, (record) => { return this.emit('model.'+model_id, record)}).then((records) => {
       return this.emit('models.'+model_id, records).then((results) => {
         return this.app.get('storage').getModel(model_id).then((model) => {
           var model_attrs = _.keys(model._attributes)
+          var identityFields = opts.identityFields
+          var hasIdentity = !_.isEmpty(identityFields)
+          
           let importResults = () => {
             return Promise.map(results, (r) => {
+              let action = null
               var values = _.pick(r, ...model_attrs)
-              var criteria = _.pick(values, ...identityFields)
-              return model.createOrUpdate(criteria, values).catch((e) => {this.app.log.error("Error imporing "+model_id, e)})
-                })
+              if (hasIdentity) {
+                var criteria = _.pick(values, ...identityFields)
+                action = model.createOrUpdate(criteria, values)
+              } else {
+                action = model.create(values)
+              }
+              return action.catch((e) => {this.app.log.error("Error imporing "+model_id, e)})
+            })
           }
           
-          if (opts.truncate && _.isEmpty(opts.identityFields)) {
+          if (opts.truncate && !hasIdentity) {
             return model.destroy({}).then(importResults)
           } else {
             return importResults()
