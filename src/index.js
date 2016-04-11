@@ -176,9 +176,8 @@ export default class DataLoader {
           var model_attrs = _.keys(model._attributes)
           var identityFields = opts.identityFields
           var hasIdentity = !_.isEmpty(identityFields)
-          
           let importResults = () => {
-            return Promise.map(results, (r) => {
+            return Promise.mapSeries(results, (r) => {
               let action = null
               var values = _.pick(r, ...model_attrs)
               if (hasIdentity) {
