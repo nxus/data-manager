@@ -25,6 +25,7 @@ import GeoJSONParser from './GeoJSONParser'
  * you can indicate:
  *  * `mapping`: object of {field: newField} name mappings
  *  * `identityFields`: for importing to models, array of fields to be used for createOrUpdate query
+ *  * `truncate`: for importing to models, true/false for deleting existing collection data before import. Ignored if `identityFields` is provided.
  *
  * ## Events
  *
@@ -40,6 +41,11 @@ import GeoJSONParser from './GeoJSONParser'
  * # API
  * -----
  */
+
+const _defaultImportOptions = {
+  truncate: true,
+  identityFields: []
+}
 
 export default class DataLoader {
   constructor(app) {
@@ -162,17 +168,25 @@ export default class DataLoader {
   _modelImport(model_id, results, opts) {
     this.on('models.'+model_id, (args) => {return args})
     this.on('model.'+model_id, (args) => {return args})
-    if (opts === undefined) opts = {}
+    if (opts === undefined) opts = _defaultImportOptions
     var identityFields = opts.identityFields || ['id']
     return Promise.mapSeries(results, (record) => { return this.emit('model.'+model_id, record)}).then((records) => {
       return this.emit('models.'+model_id, records).then((results) => {
         return this.app.get('storage').getModel(model_id).then((model) => {
           var model_attrs = _.keys(model._attributes)
-          return Promise.map(results, (r) => {
-            var values = _.pick(r, ...model_attrs)
-            var criteria = _.pick(values, ...identityFields)
-            return model.createOrUpdate(criteria, values).catch((e) => {this.app.log.error("Error imporing "+model_id, e)})
-          })
+          let importResults = () => {
+            return Promise.map(results, (r) => {
+              var values = _.pick(r, ...model_attrs)
+              var criteria = _.pick(values, ...identityFields)
+              return model.createOrUpdate(criteria, values).catch((e) => {this.app.log.error("Error imporing "+model_id, e)})
+                })
+          }
+          
+          if (opts.truncate && _.isEmpty(opts.identityFields)) {
+            return model.destroy({}).then(importResults)
+          } else {
+            return importResults()
+          }
         })
       })
     })
