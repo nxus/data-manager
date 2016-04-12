@@ -9,9 +9,11 @@ import multer from 'multer';
 Promise.promisifyAll(fs)
 
 import CSVParser from './CSVParser'
+import CSVExporter from './CSVExporter'
 import ArcJSONParser from './ArcJSONParser'
 import GeoJSONParser from './GeoJSONParser'
 import JSONParser from './JSONParser'
+import JSONExporter from './JSONExporter'
 
 /**
  * Import file contents as arrays of objects
@@ -58,9 +60,11 @@ export default class DataLoader {
       .respond('importFileToModel')
 
     new CSVParser(app)
+    new CSVExporter(app)
     new ArcJSONParser(app)
     new GeoJSONParser(app)
     new JSONParser(app)
+    new JSONExporter(app)
   }
 
   /**
@@ -96,8 +100,8 @@ export default class DataLoader {
    */
   export(type, records, opts) {
     if (opts === undefined) opts = {}
-    if(!this._exporters[type]) throw new Error('No matching exporter found: '+ type);
-    return this._exporters[type](records, opts);
+    if(!this._exporters[type]) throw new Error('No matching exporter found: '+ type)
+    return Promise.resolve(this._exporters[type](records, opts))
   }
 
   /**
@@ -109,7 +113,7 @@ export default class DataLoader {
    */
   import(type, content, opts) {
     if (opts === undefined) opts = {}
-    if(!this._parsers[type]) throw new Error('No matching parser found: '+ type);
+    if(!this._parsers[type]) throw new Error('No matching parser found: '+ type)
     let records = Promise.mapSeries(this._mappingNames(this._parsers[type](content, opts), opts), (record) => { return this.emit('record.'+type, record)})
     return this.emit('records.'+type, records)
   }
@@ -123,7 +127,7 @@ export default class DataLoader {
   importFile(filename, opts) {
     return fs.readFileAsync(filename).then((content) => {
       content = content.toString()
-      var type = path.extname(filename).replace(".", "");
+      var type = path.extname(filename).replace(".", "")
       if (opts.type) {
         type = opts.type
       }

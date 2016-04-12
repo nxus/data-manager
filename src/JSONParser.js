@@ -1,5 +1,3 @@
-import Promise from 'bluebird';
-import _ from 'underscore'
 
 export default class JSONParser {
   constructor(app) {
