@@ -11,6 +11,7 @@ Promise.promisifyAll(fs)
 import CSVParser from './CSVParser'
 import ArcJSONParser from './ArcJSONParser'
 import GeoJSONParser from './GeoJSONParser'
+import JSONParser from './JSONParser'
 
 /**
  * Import file contents as arrays of objects
@@ -59,7 +60,7 @@ export default class DataLoader {
     new CSVParser(app)
     new ArcJSONParser(app)
     new GeoJSONParser(app)
-
+    new JSONParser(app)
   }
 
   /**
