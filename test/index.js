@@ -10,6 +10,8 @@ import _ from 'underscore'
 import Module from '../src/'
 import CSVParser from '../src/CSVParser'
 import CSVExporter from '../src/CSVExporter'
+import JSONParser from '../src/JSONParser'
+import JSONExporter from '../src/JSONExporter'
 
 import TestApp from '@nxus/core/lib/test/support/TestApp';
 
@@ -64,14 +66,14 @@ describe("Data Loader Module", () => {
       module.exporter('csv', _.partial(e.export, ','))
     })
     it("should parse", () => {
-      module.import("csv", "A,B,C,D\n1,2,3,4\n").then((objs) => {
+      return module.import("csv", "A,B,C,D\n1,2,3,4\n").then((objs) => {
         objs.length.should.equal(1)
         objs[0].should.have.property("A", "1")
         objs[0].should.have.property("B", "2")
       })
     })
     it("should export", () => {
-      module.export("csv", [{A: 1, B: 2, C: 3, D: 4}]).then((contents) => {
+      return module.export("csv", [{A: 1, B: 2, C: 3, D: 4}]).then((contents) => {
         contents.should.equal( "A,B,C,D\n1,2,3,4\n")
       })
     })
@@ -90,6 +92,40 @@ describe("Data Loader Module", () => {
         app.get('storage').provide.calledWith('getModel', 'test_model').should.be.true
         done()
       }, 100)
+    })
+  })
+
+  describe("JSON", () => {
+    beforeEach(() => {
+      let p = new JSONParser(app)
+      let e = new JSONExporter(app)
+      // workaround TestApp register and events
+      module.parser('json', p.parse)
+      module.exporter('json', e.export)
+    })
+    it("should parse", () => {
+      return module.import("json", '[{"A": "1", "B": 2}]').then((objs) => {
+        objs.length.should.equal(1)
+        objs[0].should.have.property("A", "1")
+        objs[0].should.have.property("B", 2)
+      })
+    })
+    it("should parse with key", () => {
+      return module.import("json", '{"a": [{"A": "1", "B": 2}]}', {key: 'a'}).then((objs) => {
+        objs.length.should.equal(1)
+        objs[0].should.have.property("A", "1")
+        objs[0].should.have.property("B", 2)
+      })
+    })
+    it("should export", () => {
+      return module.export("json", [{A: 1, B: 2}]).then((contents) => {
+        contents.should.equal('[{"A":1,"B":2}]')
+      })
+    })
+    it("should export with key", () => {
+      return module.export("json", [{A: 1, B: 2}], {key: 'a'}).then((contents) => {
+        contents.should.equal('{"a":[{"A":1,"B":2}]}')
+      })
     })
   })
 })
