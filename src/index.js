@@ -134,7 +134,7 @@ export default class DataLoader {
     return fs.readFileAsync(filename).then((content) => {
       content = content.toString()
       var type = path.extname(filename).replace(".", "")
-      if (opts.type) {
+      if (opts && opts.type) {
         type = opts.type
       }
       return this.import(type, content, opts)
