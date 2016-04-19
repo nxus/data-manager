@@ -12,6 +12,7 @@ import CSVParser from './CSVParser'
 import CSVExporter from './CSVExporter'
 import ArcJSONParser from './ArcJSONParser'
 import GeoJSONParser from './GeoJSONParser'
+import GeoJSONExporter from './GeoJSONExporter'
 import JSONParser from './JSONParser'
 import JSONExporter from './JSONExporter'
 
@@ -69,6 +70,7 @@ export default class DataLoader {
     new CSVExporter(app)
     new ArcJSONParser(app)
     new GeoJSONParser(app)
+    new GeoJSONExporter(app)
     new JSONParser(app)
     new JSONExporter(app)
   }
