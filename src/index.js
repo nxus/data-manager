@@ -122,8 +122,10 @@ export default class DataLoader {
   import(type, content, opts) {
     if (opts === undefined) opts = {}
     if(!this._parsers[type]) throw new Error('No matching parser found: '+ type)
-    let records = Promise.mapSeries(this._mappingNames(this._parsers[type](content, opts), opts), (record) => { return this.emit('record.'+type, record)})
-    return this.emit('records.'+type, records)
+    return Promise.resolve(this._parsers[type](content, opts)).then((results) => {
+      let records = Promise.mapSeries(this._mappingNames(results, opts), (record) => { return this.emit('record.'+type, record)})
+      return this.emit('records.'+type, records)
+    })
   }
 
   /**
@@ -193,7 +195,7 @@ export default class DataLoader {
               } else {
                 action = model.create(values)
               }
-              return action.catch((e) => {this.app.log.error("Error imporing "+model_id, e)})
+              return action.catch((e) => {this.app.log.error("Error imporing "+model_id, e, e.details)})
             })
           }
           
