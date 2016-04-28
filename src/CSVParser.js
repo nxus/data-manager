@@ -20,6 +20,7 @@ export default class CSVParser {
         }
         var header = data.shift();
         let results = _.map(data, (row) => {
+          row = _.map(row, (r) => {if(_.isString(r)) r = r.trim(); return r})
           return _.object(header, row)
         })
         resolve(results)
