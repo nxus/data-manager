@@ -1,21 +1,3 @@
-'use strict';
-
-import Promise from 'bluebird'
-import fs from 'fs'
-import path from 'path'
-import _ from 'underscore'
-import multer from 'multer';
-
-Promise.promisifyAll(fs)
-
-import CSVParser from './CSVParser'
-import CSVExporter from './CSVExporter'
-import ArcJSONParser from './ArcJSONParser'
-import GeoJSONParser from './GeoJSONParser'
-import GeoJSONExporter from './GeoJSONExporter'
-import JSONParser from './JSONParser'
-import JSONExporter from './JSONExporter'
-
 /**
  * Import file contents as arrays of objects
  * 
@@ -30,7 +12,8 @@ import JSONExporter from './JSONExporter'
  *  * `mapping`: object of {field: newField} name mappings
  *  * `identityFields`: for importing to models, array of fields to be used for createOrUpdate query
  *  * `truncate`: for importing to models, true/false for deleting existing collection data before import. Ignored if `identityFields` is provided.
- *
+ *  * `strict`: defaults to true. Only import columns/data that matches the attribute names for the model. Set to false to import everything.
+ * 
  * ## Events
  *
  * You can modify the records during import with the following specific events:
@@ -41,14 +24,34 @@ import JSONExporter from './JSONExporter'
  *
  * record* events occur after parsing and name mapping
  * model* events occur after record events and before models are created/updated.
- *
+ * 
  * # API
  * -----
  */
 
+'use strict';
+
+import Promise from 'bluebird'
+import fs from 'fs'
+import path from 'path'
+import _ from 'underscore'
+import multer from 'multer';
+import morph from 'morph';
+
+Promise.promisifyAll(fs)
+
+import CSVParser from './CSVParser'
+import CSVExporter from './CSVExporter'
+import ArcJSONParser from './ArcJSONParser'
+import GeoJSONParser from './GeoJSONParser'
+import GeoJSONExporter from './GeoJSONExporter'
+import JSONParser from './JSONParser'
+import JSONExporter from './JSONExporter'
+
 const _defaultImportOptions = {
   truncate: true,
-  identityFields: []
+  identityFields: [],
+  strict: true
 }
 
 export default class DataLoader {
@@ -179,6 +182,16 @@ export default class DataLoader {
     this.on('model.'+model_id, (args) => {return args})
     if (opts === undefined) opts = _defaultImportOptions
 
+    if(typeof opts.strict != 'undefined' && opts.strict === false) {
+      results = _.map(results, (r) => {
+        var values = {}
+        _.each(r, (value, key) => {
+          values[morph.toSnake(key)] = value
+        })
+        return values
+      })
+    }
+
     return Promise.mapSeries(results, (record) => { return this.emit('model.'+model_id, record)}).then((records) => {
       return this.emit('models.'+model_id, records).then((results) => {
         return this.app.get('storage').getModel(model_id).then((model) => {
@@ -188,7 +201,11 @@ export default class DataLoader {
           let importResults = () => {
             return Promise.mapSeries(results, (r) => {
               let action = null
-              var values = _.pick(r, ...model_attrs)
+              if(typeof opts.strict != 'undefined' && opts.strict === false) {
+                var values = r
+              } else {
+                var values = _.pick(r, ...model_attrs)
+              }
               if (hasIdentity) {
                 var criteria = _.pick(values, ...identityFields)
                 action = model.createOrUpdate(criteria, values)
