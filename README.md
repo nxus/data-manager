@@ -1,4 +1,4 @@
-## DataLoader
+## nxus-data-loader
 
 [src/index.js:43-183](https://github.com/nxus/data-loader/blob/79a319262520f3cc3d172a2bbee85cf802334a3a/src/index.js#L43-L183 "Source code on GitHub")
 
@@ -32,7 +32,7 @@ model_ events occur after record events and before models are created/updated.
 
 ### 
 
-[src/index.js:32-32](https://github.com/nxus/data-loader/blob/0e3400b92a4a2c95df4c3623deaf7d255b6dc622/src/index.js#L32-L32 "Source code on GitHub")
+[src/index.js:32-32](https://github.com/nxus/data-loader/blob/d53f5f08b088a2571c711d8d34515dedc31ab827/src/index.js#L32-L32 "Source code on GitHub")
 
 Import file contents as arrays of objects
 
@@ -68,7 +68,7 @@ model_ events occur after record events and before models are created/updated.
 
 ### export
 
-[src/JSONExporter.js:14-21](https://github.com/nxus/data-loader/blob/0e3400b92a4a2c95df4c3623deaf7d255b6dc622/src/JSONExporter.js#L14-L21 "Source code on GitHub")
+[src/JSONExporter.js:14-21](https://github.com/nxus/data-loader/blob/d53f5f08b088a2571c711d8d34515dedc31ab827/src/JSONExporter.js#L14-L21 "Source code on GitHub")
 
 Stringify an array of results into JSON. Assumes top-level is array, unless
  opts.key is provided to wrap results in an object.
@@ -81,7 +81,7 @@ Stringify an array of results into JSON. Assumes top-level is array, unless
 
 ### export
 
-[src/index.js:112-116](https://github.com/nxus/data-loader/blob/0e3400b92a4a2c95df4c3623deaf7d255b6dc622/src/index.js#L112-L116 "Source code on GitHub")
+[src/index.js:112-116](https://github.com/nxus/data-loader/blob/d53f5f08b088a2571c711d8d34515dedc31ab827/src/index.js#L112-L116 "Source code on GitHub")
 
 Request formattted output based on type
 
@@ -95,7 +95,7 @@ Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refe
 
 ### exporter
 
-[src/index.js:96-98](https://github.com/nxus/data-loader/blob/0e3400b92a4a2c95df4c3623deaf7d255b6dc622/src/index.js#L96-L98 "Source code on GitHub")
+[src/index.js:96-98](https://github.com/nxus/data-loader/blob/d53f5f08b088a2571c711d8d34515dedc31ab827/src/index.js#L96-L98 "Source code on GitHub")
 
 Provide an exporter for a particular type (file extension)
 
@@ -106,7 +106,7 @@ Provide an exporter for a particular type (file extension)
 
 ### import
 
-[src/index.js:125-132](https://github.com/nxus/data-loader/blob/0e3400b92a4a2c95df4c3623deaf7d255b6dc622/src/index.js#L125-L132 "Source code on GitHub")
+[src/index.js:125-132](https://github.com/nxus/data-loader/blob/d53f5f08b088a2571c711d8d34515dedc31ab827/src/index.js#L125-L132 "Source code on GitHub")
 
 Request parsed results based on type
 
@@ -120,7 +120,7 @@ Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refe
 
 ### importFile
 
-[src/index.js:140-149](https://github.com/nxus/data-loader/blob/0e3400b92a4a2c95df4c3623deaf7d255b6dc622/src/index.js#L140-L149 "Source code on GitHub")
+[src/index.js:140-149](https://github.com/nxus/data-loader/blob/d53f5f08b088a2571c711d8d34515dedc31ab827/src/index.js#L140-L149 "Source code on GitHub")
 
 Request parsed results from a file path
 
@@ -133,7 +133,7 @@ Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refe
 
 ### importFileToModel
 
-[src/index.js:172-176](https://github.com/nxus/data-loader/blob/0e3400b92a4a2c95df4c3623deaf7d255b6dc622/src/index.js#L172-L176 "Source code on GitHub")
+[src/index.js:172-176](https://github.com/nxus/data-loader/blob/d53f5f08b088a2571c711d8d34515dedc31ab827/src/index.js#L172-L176 "Source code on GitHub")
 
 Import file contents to a model
 
@@ -147,7 +147,7 @@ Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refe
 
 ### importToModel
 
-[src/index.js:159-163](https://github.com/nxus/data-loader/blob/0e3400b92a4a2c95df4c3623deaf7d255b6dc622/src/index.js#L159-L163 "Source code on GitHub")
+[src/index.js:159-163](https://github.com/nxus/data-loader/blob/d53f5f08b088a2571c711d8d34515dedc31ab827/src/index.js#L159-L163 "Source code on GitHub")
 
 Import string contents to a model
 
@@ -162,7 +162,7 @@ Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refe
 
 ### parser
 
-[src/index.js:86-90](https://github.com/nxus/data-loader/blob/0e3400b92a4a2c95df4c3623deaf7d255b6dc622/src/index.js#L86-L90 "Source code on GitHub")
+[src/index.js:86-90](https://github.com/nxus/data-loader/blob/d53f5f08b088a2571c711d8d34515dedc31ab827/src/index.js#L86-L90 "Source code on GitHub")
 
 Provide a parser for a particular type (file extension)
 
@@ -173,7 +173,7 @@ Provide a parser for a particular type (file extension)
 
 ### parse
 
-[src/JSONParser.js:14-20](https://github.com/nxus/data-loader/blob/0e3400b92a4a2c95df4c3623deaf7d255b6dc622/src/JSONParser.js#L14-L20 "Source code on GitHub")
+[src/JSONParser.js:14-20](https://github.com/nxus/data-loader/blob/d53f5f08b088a2571c711d8d34515dedc31ab827/src/JSONParser.js#L14-L20 "Source code on GitHub")
 
 Parse JSON into an array of results. Assumes top-level is array, unless
  opts.key is provided to pick a top-level key from parsed object as results.
