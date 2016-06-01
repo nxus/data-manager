@@ -3,7 +3,7 @@
  * 
  * ## Installation
  *
- *    > npm install @nxus/data-loader --save
+ *    > npm install nxus-data-loader --save
  *
  * ## Options
  *

@@ -1,11 +1,11 @@
 {
-  "name": "@nxus/data-loader",
-  "version": "2.4.0-7",
+  "name": "nxus-data-loader",
+  "version": "3.0.0-0",
   "description": "Data format parsers and loaders for nxus",
   "main": "lib",
   "scripts": {
-    "test": "NODE_ENV=test mocha --compilers js:babel/register -R spec",
-    "compile": "babel --optional runtime -d lib/ src/",
+    "test": "NODE_ENV=test mocha --compilers js:babel-core/register -R spec",
+    "compile": "babel src --out-dir lib",
     "prepublish": "npm run compile",
     "postpublish": "npm run docs-readme && npm run commit-update-docs",
     "docs-readme": "export NAME=`npm view . name`; export VERSION=`npm view . version`; documentation readme ./src/* --github --name $NAME --project-version $VERSION --readme-file ./README.md -s API",
@@ -21,8 +21,12 @@
     "url": "https://github.com/nxus/data-loader/issues"
   },
   "homepage": "https://github.com/nxus/data-loader",
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
+  },
   "dependencies": {
-    "babel-runtime": "^5.7.0",
     "bluebird": "^3.3.3",
     "csv-parse": "^1.0.2",
     "csv-stringify": "^1.0.2",
@@ -32,17 +36,18 @@
     "underscore": "^1.8.3"
   },
   "peerDependencies": {
-    "@nxus/core": "^2.4.0-0",
-    "@nxus/storage": "^2.4.0-0",
-    "@nxus/admin-ui": "^2.4.0-0"
+    "nxus-core": "^3.0.0-0",
+    "nxus-storage": "^3.0.0-0"
   },
   "devDependencies": {
-    "@nxus/core": "^2.4.0-0",
-    "babel": "^5.6.23",
-    "chai": "^3.5.0",
-    "chai-as-promised": "^5.2.0",
-    "mocha": "^2.4.5",
+    "mocha": "^2.2.5",
     "should": "^7.0.2",
-    "sinon": "^1.17.2"
+    "sinon": "^1.17.2",
+    "chai": "^3.5.0",
+    "documentation": "^4.0.0-beta",
+    "chai-as-promised": "^5.2.0",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-cli": "^6.9.0",
+    "babel-core": "^6.9.0"
   }
 }

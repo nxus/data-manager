@@ -1,7 +1,7 @@
 /* 
 * @Author: Mike Reich
 * @Date:   2016-02-13 08:59:44
-* @Last Modified 2016-02-13 @Last Modified time: 2016-02-13 08:59:44
+* @Last Modified 2016-05-20
 */
 
 'use strict';
@@ -13,7 +13,7 @@ import CSVExporter from '../src/CSVExporter'
 import JSONParser from '../src/JSONParser'
 import JSONExporter from '../src/JSONExporter'
 
-import TestApp from '@nxus/core/lib/test/support/TestApp';
+import TestApp from 'nxus-core/lib/test/support/TestApp';
 
 describe("Data Loader Module", () => {
   var module, app;
