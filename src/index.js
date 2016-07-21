@@ -178,8 +178,18 @@ export default class DataLoader {
   // Internal
   
   _modelImport(model_id, results, opts) {
-    if(this.app.get('data-loader').listenerCount('models.'+model_id) == 0) {
+    let loader = this.app.get('data-loader')
+    //stub default handlers on "model" and "models" events
+    if((loader.listenerCount('models.'+model_id) + 
+        loader.listenerCount('models.'+model_id+'.before') +
+        loader.listenerCount('models.'+model_id+'.after')) == 0) {
+      this.app.log.debug("data-loader adding default models." + model_id)
       this.on('models.'+model_id, (args) => {return args})
+    }
+    if((loader.listenerCount('model.'+model_id) + 
+        loader.listenerCount('model.'+model_id+'.before') +
+        loader.listenerCount('model.'+model_id+'.after')) == 0) {
+      this.app.log.debug("data-loader adding default model." + model_id)
       this.on('model.'+model_id, (args) => {return args})
     }
     if (opts === undefined) opts = _defaultImportOptions
@@ -195,6 +205,7 @@ export default class DataLoader {
     }
 
     return Promise.mapSeries(results, (record) => { return this.emit('model.'+model_id, record)}).then((records) => {
+      this.app.log.debug("data-loader after model-events working with records ", records);
       return this.emit('models.'+model_id, records).then((results) => {
         return this.app.get('storage').getModel(model_id).then((model) => {
           var model_attrs = _.keys(model._attributes)
