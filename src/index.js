@@ -180,16 +180,12 @@ export default class DataLoader {
   _modelImport(model_id, results, opts) {
     let loader = this.app.get('data-loader')
     //stub default handlers on "model" and "models" events
-    if((loader.listenerCount('models.'+model_id) + 
-        loader.listenerCount('models.'+model_id+'.before') +
-        loader.listenerCount('models.'+model_id+'.after')) == 0) {
-      this.app.log.debug("data-loader adding default models." + model_id)
+    if((loader.listenerCount('models.'+model_id)) == 0) {
+      this.app.log.debug("data-loader adding handler models." + model_id)
       this.on('models.'+model_id, (args) => {return args})
     }
-    if((loader.listenerCount('model.'+model_id) + 
-        loader.listenerCount('model.'+model_id+'.before') +
-        loader.listenerCount('model.'+model_id+'.after')) == 0) {
-      this.app.log.debug("data-loader adding default model." + model_id)
+    if((loader.listenerCount('model.'+model_id)) == 0) {
+      this.app.log.debug("data-loader adding handler model." + model_id)
       this.on('model.'+model_id, (args) => {return args})
     }
     if (opts === undefined) opts = _defaultImportOptions
