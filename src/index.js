@@ -59,6 +59,7 @@ export default class DataLoader {
     this.app = app
     this._parsers = {}
     this._exporters = {}
+    this.storage = app.get('storage')
     app.get('data-loader').use(this)
       .gather('parser')
       .gather('exporter')
@@ -181,11 +182,9 @@ export default class DataLoader {
     let loader = this.app.get('data-loader')
     //stub default handlers on "model" and "models" events
     if((loader.listenerCount('models.'+model_id)) == 0) {
-      this.app.log.debug("data-loader adding handler models." + model_id)
       this.on('models.'+model_id, (args) => {return args})
     }
     if((loader.listenerCount('model.'+model_id)) == 0) {
-      this.app.log.debug("data-loader adding handler model." + model_id)
       this.on('model.'+model_id, (args) => {return args})
     }
     if (opts === undefined) opts = _defaultImportOptions
@@ -201,9 +200,9 @@ export default class DataLoader {
     }
 
     return Promise.mapSeries(results, (record) => { return this.emit('model.'+model_id, record)}).then((records) => {
-      this.app.log.debug("data-loader after model-events working with records ", records);
       return this.emit('models.'+model_id, records).then((results) => {
-        return this.app.get('storage').getModel(model_id).then((model) => {
+        this.app.log.debug("about to call the storage for model " + model_id)
+        return this.storage.getModel(model_id).then((model) => {
           var model_attrs = _.keys(model._attributes)
           var identityFields = opts.identityFields
           var hasIdentity = !_.isEmpty(identityFields)
@@ -215,11 +214,12 @@ export default class DataLoader {
               } else {
                 var values = _.pick(r, ...model_attrs)
               }
+
               if (hasIdentity) {
                 var criteria = _.pick(values, ...identityFields)
-                action = model.createOrUpdate(criteria, values)
+                action = this._storeResultsWithModel(model, values, criteria)
               } else {
-                action = model.create(values)
+                action = this._storeResultsWithModel(model, values)
               }
               return action.catch((e) => {this.app.log.error("Error imporing "+model_id, e, e.details)})
             })
@@ -234,6 +234,20 @@ export default class DataLoader {
       })
     })
   }
+
+  /**
+   * Simple do-storage function
+   * to help mock up storage for tests, other applications.
+   * @param  {[type]} model          [description]
+   * @param  {[type]} values         [description]
+   * @param  {[type]} uniqueCriteria [description]
+   * @return {[type]}                [description]
+   */
+  _storeResultsWithModel(model, values, uniqueCriteria) {
+    if (uniqueCriteria) return model.createOrUpdate(uniqueCriteria, values)
+    return model.create(values)
+  }
+
 
   _mappingNames(results, options) {
     var mapping = options.mapping
