@@ -214,14 +214,13 @@ export default class DataLoader {
               } else {
                 var values = _.pick(r, ...model_attrs)
               }
-
               if (hasIdentity) {
                 var criteria = _.pick(values, ...identityFields)
                 action = this._storeResultsWithModel(model, values, criteria)
               } else {
                 action = this._storeResultsWithModel(model, values)
               }
-              return action.catch((e) => {this.app.log.error("Error imporing "+model_id, e, e.details)})
+              return action
             })
           }
           
@@ -230,7 +229,7 @@ export default class DataLoader {
           } else {
             return importResults()
           }
-        })
+        }).catch((e) => {this.app.log.error("Error imporing "+model_id, e, e.details)})
       })
     })
   }
@@ -244,8 +243,10 @@ export default class DataLoader {
    * @return {[type]}                [description]
    */
   _storeResultsWithModel(model, values, uniqueCriteria) {
-    if (uniqueCriteria) return model.createOrUpdate(uniqueCriteria, values)
-    return model.create(values)
+    if (uniqueCriteria) 
+      return model.createOrUpdate(uniqueCriteria, values)
+    else 
+      return model.create(values)
   }
 
 
