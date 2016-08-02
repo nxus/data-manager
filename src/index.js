@@ -59,6 +59,7 @@ export default class DataLoader {
     this.app = app
     this._parsers = {}
     this._exporters = {}
+    this.storage = app.get('storage')
     app.get('data-loader').use(this)
       .gather('parser')
       .gather('exporter')
@@ -178,8 +179,12 @@ export default class DataLoader {
   // Internal
   
   _modelImport(model_id, results, opts) {
-    if(this.app.get('data-loader').listenerCount('models.'+model_id) == 0) {
+    let loader = this.app.get('data-loader')
+    //stub default handlers on "model" and "models" events
+    if((loader.listenerCount('models.'+model_id)) == 0) {
       this.on('models.'+model_id, (args) => {return args})
+    }
+    if((loader.listenerCount('model.'+model_id)) == 0) {
       this.on('model.'+model_id, (args) => {return args})
     }
     if (opts === undefined) opts = _defaultImportOptions
@@ -196,7 +201,8 @@ export default class DataLoader {
 
     return Promise.mapSeries(results, (record) => { return this.emit('model.'+model_id, record)}).then((records) => {
       return this.emit('models.'+model_id, records).then((results) => {
-        return this.app.get('storage').getModel(model_id).then((model) => {
+        this.app.log.debug("about to call the storage for model " + model_id)
+        return this.storage.getModel(model_id).then((model) => {
           var model_attrs = _.keys(model._attributes)
           var identityFields = opts.identityFields
           var hasIdentity = !_.isEmpty(identityFields)
@@ -210,11 +216,11 @@ export default class DataLoader {
               }
               if (hasIdentity) {
                 var criteria = _.pick(values, ...identityFields)
-                action = model.createOrUpdate(criteria, values)
+                action = this._storeResultsWithModel(model, values, criteria)
               } else {
-                action = model.create(values)
+                action = this._storeResultsWithModel(model, values)
               }
-              return action.catch((e) => {this.app.log.error("Error imporing "+model_id, e, e.details)})
+              return action
             })
           }
           
@@ -223,10 +229,26 @@ export default class DataLoader {
           } else {
             return importResults()
           }
-        })
+        }).catch((e) => {this.app.log.error("Error imporing "+model_id, e, e.details)})
       })
     })
   }
+
+  /**
+   * Simple do-storage function
+   * to help mock up storage for tests, other applications.
+   * @param  {[type]} model          [description]
+   * @param  {[type]} values         [description]
+   * @param  {[type]} uniqueCriteria [description]
+   * @return {[type]}                [description]
+   */
+  _storeResultsWithModel(model, values, uniqueCriteria) {
+    if (uniqueCriteria) 
+      return model.createOrUpdate(uniqueCriteria, values)
+    else 
+      return model.create(values)
+  }
+
 
   _mappingNames(results, options) {
     var mapping = options.mapping

@@ -7,24 +7,35 @@
 'use strict';
 import _ from 'underscore'
 
-import Module from '../src/'
+import DataLoaderModule from '../src/'
 import CSVParser from '../src/CSVParser'
 import CSVExporter from '../src/CSVExporter'
 import JSONParser from '../src/JSONParser'
 import JSONExporter from '../src/JSONExporter'
 
-import TestApp from 'nxus-core/lib/test/support/TestApp';
+import TestApp from 'nxus-core/lib/test/support/TestApp'
+
+import Sinon from 'sinon'
 
 describe("Data Loader Module", () => {
   var module, app;
  
+  //handler for model events
+  function testAddOneRowHandler(row) {
+    return _.mapObject(row, (value) => {
+      return value + 1;
+    })
+  }
+
+  var addOneRowHandlerSpy = Sinon.spy(testAddOneRowHandler)
+
   beforeEach(() => {
     app = new TestApp();
-    module = new Module(app);
+    module = new DataLoaderModule(app);
   });
   
   describe("Load", () => {
-    it("should not be null", () => Module.should.not.be.null)
+    it("should not be null", () => DataLoaderModule.should.not.be.null)
 
     it("should be instantiated", () => {
       module.should.not.be.null;
@@ -84,7 +95,8 @@ describe("Data Loader Module", () => {
       })
     })
     it("should emit model events", (done) => {
-      // Can't actually use promise because storage does not return
+      // Can't actually use promise because storage does not return: 
+      // TODO: improve this with mock storage?
       module._modelImport("test_model", [{a:1}], {})
       setTimeout(() => {
         app.get('data-loader').emit.calledWith('models.test_model').should.be.true
@@ -93,6 +105,18 @@ describe("Data Loader Module", () => {
         done()
       }, 100)
     })
+    /*
+      ScottM: failing test  - keeping code here and adding an issue
+     */
+    // it("should call registered model event handlers", (done)  => {
+    //   //register handler
+    //   app.get('data-loader').on('model.test_model', testAddOneRowHandler)
+    //   module._modelImport("test_model", [{a:2},{b:2}], {}) 
+    //   setTimeout(() => {
+    //     addOneRowHandlerSpy.calledWith({a:2}).should.be.true
+    //     done()
+    //   }, 100)
+    // })
   })
 
   describe("JSON", () => {
