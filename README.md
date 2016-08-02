@@ -32,13 +32,13 @@ model_ events occur after record events and before models are created/updated.
 
 ### 
 
-[src/index.js:32-32](https://github.com/nxus/data-loader/blob/d53f5f08b088a2571c711d8d34515dedc31ab827/src/index.js#L32-L32 "Source code on GitHub")
+[src/index.js:32-32](https://github.com/nxus/data-loader/blob/7d771d40971ea335a32ebb2eca77f183b4c7a69f/src/index.js#L32-L32 "Source code on GitHub")
 
 Import file contents as arrays of objects
 
 #### Installation
 
-> npm install @nxus/data-loader --save
+> npm install nxus-data-loader --save
 
 #### Options
 
@@ -66,22 +66,31 @@ model_ events occur after record events and before models are created/updated.
 
 * * *
 
-### export
+### parser
 
-[src/JSONExporter.js:14-21](https://github.com/nxus/data-loader/blob/d53f5f08b088a2571c711d8d34515dedc31ab827/src/JSONExporter.js#L14-L21 "Source code on GitHub")
+[src/index.js:87-91](https://github.com/nxus/data-loader/blob/7d771d40971ea335a32ebb2eca77f183b4c7a69f/src/index.js#L87-L91 "Source code on GitHub")
 
-Stringify an array of results into JSON. Assumes top-level is array, unless
- opts.key is provided to wrap results in an object.
+Provide a parser for a particular type (file extension)
 
 **Parameters**
 
--   `records` **[array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** 
--   `options` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
--   `opts`  
+-   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The type (e.g. 'html') this renderer should handle
+-   `handler` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Function to receive (content, options) and return parsed array of result objects
+
+### exporter
+
+[src/index.js:97-99](https://github.com/nxus/data-loader/blob/7d771d40971ea335a32ebb2eca77f183b4c7a69f/src/index.js#L97-L99 "Source code on GitHub")
+
+Provide an exporter for a particular type (file extension)
+
+**Parameters**
+
+-   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The type (e.g. 'html') this exporter creates
+-   `handler` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Function to receive (content, options) and return formatted output content
 
 ### export
 
-[src/index.js:112-116](https://github.com/nxus/data-loader/blob/d53f5f08b088a2571c711d8d34515dedc31ab827/src/index.js#L112-L116 "Source code on GitHub")
+[src/index.js:113-117](https://github.com/nxus/data-loader/blob/7d771d40971ea335a32ebb2eca77f183b4c7a69f/src/index.js#L113-L117 "Source code on GitHub")
 
 Request formattted output based on type
 
@@ -93,20 +102,9 @@ Request formattted output based on type
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** String of formatted output
 
-### exporter
-
-[src/index.js:96-98](https://github.com/nxus/data-loader/blob/d53f5f08b088a2571c711d8d34515dedc31ab827/src/index.js#L96-L98 "Source code on GitHub")
-
-Provide an exporter for a particular type (file extension)
-
-**Parameters**
-
--   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The type (e.g. 'html') this exporter creates
--   `handler` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Function to receive (content, options) and return formatted output content
-
 ### import
 
-[src/index.js:125-132](https://github.com/nxus/data-loader/blob/d53f5f08b088a2571c711d8d34515dedc31ab827/src/index.js#L125-L132 "Source code on GitHub")
+[src/index.js:126-133](https://github.com/nxus/data-loader/blob/7d771d40971ea335a32ebb2eca77f183b4c7a69f/src/index.js#L126-L133 "Source code on GitHub")
 
 Request parsed results based on type
 
@@ -120,7 +118,7 @@ Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Refe
 
 ### importFile
 
-[src/index.js:140-149](https://github.com/nxus/data-loader/blob/d53f5f08b088a2571c711d8d34515dedc31ab827/src/index.js#L140-L149 "Source code on GitHub")
+[src/index.js:141-150](https://github.com/nxus/data-loader/blob/7d771d40971ea335a32ebb2eca77f183b4c7a69f/src/index.js#L141-L150 "Source code on GitHub")
 
 Request parsed results from a file path
 
@@ -131,23 +129,9 @@ Request parsed results from a file path
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** Array of parsed result objects
 
-### importFileToModel
-
-[src/index.js:172-176](https://github.com/nxus/data-loader/blob/d53f5f08b088a2571c711d8d34515dedc31ab827/src/index.js#L172-L176 "Source code on GitHub")
-
-Import file contents to a model
-
-**Parameters**
-
--   `model` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The identity of the model to populate
--   `filename` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The filename to read and parse
--   `opts` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options for the parser context
-
-Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** Array of instances
-
 ### importToModel
 
-[src/index.js:159-163](https://github.com/nxus/data-loader/blob/d53f5f08b088a2571c711d8d34515dedc31ab827/src/index.js#L159-L163 "Source code on GitHub")
+[src/index.js:160-164](https://github.com/nxus/data-loader/blob/7d771d40971ea335a32ebb2eca77f183b4c7a69f/src/index.js#L160-L164 "Source code on GitHub")
 
 Import string contents to a model
 
@@ -160,20 +144,51 @@ Import string contents to a model
 
 Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** Array of instances
 
-### parser
+### importFileToModel
 
-[src/index.js:86-90](https://github.com/nxus/data-loader/blob/d53f5f08b088a2571c711d8d34515dedc31ab827/src/index.js#L86-L90 "Source code on GitHub")
+[src/index.js:173-177](https://github.com/nxus/data-loader/blob/7d771d40971ea335a32ebb2eca77f183b4c7a69f/src/index.js#L173-L177 "Source code on GitHub")
 
-Provide a parser for a particular type (file extension)
+Import file contents to a model
 
 **Parameters**
 
--   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The type (e.g. 'html') this renderer should handle
--   `handler` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Function to receive (content, options) and return parsed array of result objects
+-   `model` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The identity of the model to populate
+-   `filename` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The filename to read and parse
+-   `opts` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options for the parser context
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** Array of instances
+
+### \_storeResultsWithModel
+
+[src/index.js:245-250](https://github.com/nxus/data-loader/blob/7d771d40971ea335a32ebb2eca77f183b4c7a69f/src/index.js#L245-L250 "Source code on GitHub")
+
+Simple do-storage function
+to help mock up storage for tests, other applications.
+
+**Parameters**
+
+-   `model` **\[type]** [description]
+-   `values` **\[type]** [description]
+-   `uniqueCriteria` **\[type]** [description]
+
+Returns **\[type]** [description]
+
+### export
+
+[src/JSONExporter.js:14-21](https://github.com/nxus/data-loader/blob/7d771d40971ea335a32ebb2eca77f183b4c7a69f/src/JSONExporter.js#L14-L21 "Source code on GitHub")
+
+Stringify an array of results into JSON. Assumes top-level is array, unless
+ opts.key is provided to wrap results in an object.
+
+**Parameters**
+
+-   `records` **[array](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array)** 
+-   `options` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+-   `opts`  
 
 ### parse
 
-[src/JSONParser.js:14-20](https://github.com/nxus/data-loader/blob/d53f5f08b088a2571c711d8d34515dedc31ab827/src/JSONParser.js#L14-L20 "Source code on GitHub")
+[src/JSONParser.js:14-20](https://github.com/nxus/data-loader/blob/7d771d40971ea335a32ebb2eca77f183b4c7a69f/src/JSONParser.js#L14-L20 "Source code on GitHub")
 
 Parse JSON into an array of results. Assumes top-level is array, unless
  opts.key is provided to pick a top-level key from parsed object as results.
