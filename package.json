@@ -1,6 +1,6 @@
 {
   "name": "nxus-data-loader",
-  "version": "3.0.0-1",
+  "version": "3.0.0",
   "description": "Data format parsers and loaders for nxus",
   "main": "lib",
   "scripts": {
