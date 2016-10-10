@@ -1,7 +1,8 @@
+import {dataManager} from '../../'
 
 export default class JSONExporter {
-  constructor(app) {
-    app.get('data-loader').exporter('json', this.export.bind(this))
+  constructor() {
+    dataManager.exporter('json', this.export.bind(this))
 
   }
 

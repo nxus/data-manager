@@ -2,12 +2,14 @@ import stringify from 'csv-stringify';
 import Promise from 'bluebird';
 import _ from 'underscore'
 
+import {dataManager} from '../../'
+
 let stringifier = Promise.promisify(stringify)
 
 export default class CSVExporter {
-  constructor(app) {
-    app.get('data-loader').exporter('csv', _.partial(this.export, ',').bind(this))
-    app.get('data-loader').exporter('tsv', _.partial(this.export, '\t').bind(this))
+  constructor() {
+    dataManager.exporter('csv', _.partial(this.export, ',').bind(this))
+    dataManager.exporter('tsv', _.partial(this.export, '\t').bind(this))
 
   }
 

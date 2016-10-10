@@ -1,12 +1,12 @@
 {
-  "name": "nxus-data-loader",
-  "version": "3.0.0",
+  "name": "nxus-data-manager",
+  "version": "4.0.0",
   "description": "Data format parsers and loaders for nxus",
   "main": "lib",
   "scripts": {
     "preversion": "npm test",
     "postversion": "npm run build-docs && git push && git push --tags",
-    "test": "npm run compile && NODE_ENV=test mocha --compilers js:babel-core/register -R spec",
+    "test": "NODE_ENV=test mocha --compilers js:babel-core/register -R spec test/*.js src/modules/**/test/*.js",
     "compile": "babel src --out-dir lib",
     "prepublish": "npm run compile",
     "build-docs": "export NAME=`npm view . name`; export VERSION=`npm view . version`; documentation readme ./src/*.js --name $NAME --project-version $VERSION --readme-file ./README.md -s $NAME",
@@ -14,14 +14,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/nxus/data-loader.git"
+    "url": "git+https://github.com/nxus/data-manager.git"
   },
   "author": "loppear",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/nxus/data-loader/issues"
+    "url": "https://github.com/nxus/data-manager/issues"
   },
-  "homepage": "https://github.com/nxus/data-loader",
+  "homepage": "https://github.com/nxus/data-manager",
   "dependencies": {
     "bluebird": "^3.3.3",
     "csv-parse": "^1.0.2",
@@ -32,8 +32,9 @@
     "underscore": "^1.8.3"
   },
   "peerDependencies": {
-    "nxus-core": "^3.0.0",
-    "nxus-storage": "^3.0.0"
+    "nxus-core": "^4.0.0-2",
+    "nxus-storage": "^4.0.0-0",
+    "nxus-router": "^4.0.0-0"
   },
   "devDependencies": {
     "mocha": "^2.2.5",
