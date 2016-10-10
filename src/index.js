@@ -249,5 +249,5 @@ class DataManager extends NxusModule {
 }
 
 const dataManager = DataManager.getProxy()
-
-export {DataManager as default, dataManager}
+import {fixtures} from './modules/data-fixtures'
+export {DataManager as default, dataManager, fixtures}

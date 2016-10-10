@@ -8,7 +8,7 @@
 import _ from 'underscore'
 
 import DataManagerModule from '../src/'
-import {dataManager as dataProxy} from '../src/'
+import {dataManager as dataProxy, fixtures} from '../src/'
 import {application} from 'nxus-core'
 
 describe("Data Loader Module", () => {
@@ -25,6 +25,9 @@ describe("Data Loader Module", () => {
     it("should be instantiated", () => {
       module.should.not.be.null;
     });
+    it("should expose fixtures", () => {
+      fixtures.should.not.be.null
+    })
   });
 
 })
