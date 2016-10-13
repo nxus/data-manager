@@ -82,6 +82,7 @@ class DataManager extends NxusModule {
   }
 
   uploadPath(path, field, dest=process.cwd()+'/uploads/') {
+    this.log.debug("Setting multer upload path", path, field)
     var upload = multer({dest: dest})
     router.middleware(path, upload.single(field))
   }

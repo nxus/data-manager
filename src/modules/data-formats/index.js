@@ -8,7 +8,7 @@ import GeoJSONExporter from './GeoJSONExporter'
 import JSONParser from './JSONParser'
 import JSONExporter from './JSONExporter'
 
-class DataManagerFormats extends NxusModule {
+export default class DataManagerFormats extends NxusModule {
   constructor() {
     super()
     new CSVParser()
