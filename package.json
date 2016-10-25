@@ -1,6 +1,6 @@
 {
   "name": "nxus-data-manager",
-  "version": "4.0.1-0",
+  "version": "4.0.0-1",
   "description": "Data format parsers and loaders for nxus",
   "main": "lib",
   "scripts": {
@@ -28,13 +28,11 @@
     "csv-stringify": "^1.0.2",
     "morph": "^0.2.0",
     "multer": "^1.1.0",
-    "terraformer-arcgis-parser": "^1.0.4",
-    "underscore": "^1.8.3"
-  },
-  "peerDependencies": {
     "nxus-core": "^4.0.0-2",
     "nxus-storage": "^4.0.0-0",
-    "nxus-router": "^4.0.0-0"
+    "nxus-router": "^4.0.0-0",
+    "terraformer-arcgis-parser": "^1.0.4",
+    "underscore": "^1.8.3",
   },
   "devDependencies": {
     "mocha": "^2.2.5",
