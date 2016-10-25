@@ -2,9 +2,11 @@ import _ from 'underscore'
 
 import ArcGIS from 'terraformer-arcgis-parser'
 
+import {dataManager} from '../../'
+
 export default class ArcJSON {
-  constructor(app) {
-    app.get('data-loader').parser('arcjson', this.parse.bind(this))
+  constructor() {
+    dataManager.parser('arcjson', this.parse.bind(this))
   }
 
   parse(contents, opts) {

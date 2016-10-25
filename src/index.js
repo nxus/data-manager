@@ -31,6 +31,10 @@
 
 'use strict';
 
+import {NxusModule} from 'nxus-core'
+import {storage} from 'nxus-storage'
+import {router} from 'nxus-router'
+
 import Promise from 'bluebird'
 import fs from 'fs'
 import path from 'path'
@@ -40,43 +44,17 @@ import morph from 'morph';
 
 Promise.promisifyAll(fs)
 
-import CSVParser from './CSVParser'
-import CSVExporter from './CSVExporter'
-import ArcJSONParser from './ArcJSONParser'
-import GeoJSONParser from './GeoJSONParser'
-import GeoJSONExporter from './GeoJSONExporter'
-import JSONParser from './JSONParser'
-import JSONExporter from './JSONExporter'
-
 const _defaultImportOptions = {
   truncate: true,
   identityFields: [],
   strict: true
 }
 
-export default class DataLoader {
-  constructor(app) {
-    this.app = app
+class DataManager extends NxusModule {
+  constructor() {
+    super()
     this._parsers = {}
     this._exporters = {}
-    this.storage = app.get('storage')
-    app.get('data-loader').use(this)
-      .gather('parser')
-      .gather('exporter')
-      .gather('uploadPath')
-      .respond('export')
-      .respond('import')
-      .respond('importFile')
-      .respond('importToModel')
-      .respond('importFileToModel')
-
-    new CSVParser(app)
-    new CSVExporter(app)
-    new ArcJSONParser(app)
-    new GeoJSONParser(app)
-    new GeoJSONExporter(app)
-    new JSONParser(app)
-    new JSONExporter(app)
   }
 
   /**
@@ -85,8 +63,13 @@ export default class DataLoader {
    * @param {function} handler Function to receive (content, options) and return parsed array of result objects
    */
   parser(type, handler) {
-    this.on('records.'+type, (args) => {return args})
-    this.on('record.'+type, (args) => {return args})
+    //stub default handlers on "record" and "records" events
+    if((dataManager.listenerCount('records.'+type)) == 0) {
+      this.on('records.'+type, (args) => {return args})
+    }
+    if((dataManager.listenerCount('record.'+type)) == 0) {
+      this.on('record.'+type, (args) => {return args})
+    }
     this._parsers[type] = handler
   }
   /**
@@ -99,8 +82,9 @@ export default class DataLoader {
   }
 
   uploadPath(path, field, dest=process.cwd()+'/uploads/') {
+    this.log.debug("Setting multer upload path", path, field)
     var upload = multer({dest: dest})
-    this.app.get('router').middleware(path, upload.single(field))
+    router.middleware(path, upload.single(field))
   }
   
   /**
@@ -127,8 +111,9 @@ export default class DataLoader {
     if (opts === undefined) opts = {}
     if(!this._parsers[type]) throw new Error('No matching parser found: '+ type)
     return Promise.resolve(this._parsers[type](content, opts)).then((results) => {
-      let records = Promise.mapSeries(this._mappingNames(results, opts), (record) => { return this.emit('record.'+type, record)})
-      return this.emit('records.'+type, records)
+      return Promise.mapSeries(this._mappingNames(results, opts), (record) => { return this.emit('record.'+type, record)}).then((records) => {
+        return this.emit('records.'+type, records)
+      })
     })
   }
 
@@ -179,12 +164,11 @@ export default class DataLoader {
   // Internal
   
   _modelImport(model_id, results, opts) {
-    let loader = this.app.get('data-loader')
     //stub default handlers on "model" and "models" events
-    if((loader.listenerCount('models.'+model_id)) == 0) {
+    if((dataManager.listenerCount('models.'+model_id)) == 0) {
       this.on('models.'+model_id, (args) => {return args})
     }
-    if((loader.listenerCount('model.'+model_id)) == 0) {
+    if((dataManager.listenerCount('model.'+model_id)) == 0) {
       this.on('model.'+model_id, (args) => {return args})
     }
     if (opts === undefined) opts = _defaultImportOptions
@@ -201,8 +185,7 @@ export default class DataLoader {
 
     return Promise.mapSeries(results, (record) => { return this.emit('model.'+model_id, record)}).then((records) => {
       return this.emit('models.'+model_id, records).then((results) => {
-        this.app.log.debug("about to call the storage for model " + model_id)
-        return this.storage.getModel(model_id).then((model) => {
+        return storage.getModel(model_id).then((model) => {
           var model_attrs = _.keys(model._attributes)
           var identityFields = opts.identityFields
           var hasIdentity = !_.isEmpty(identityFields)
@@ -229,7 +212,7 @@ export default class DataLoader {
           } else {
             return importResults()
           }
-        }).catch((e) => {this.app.log.error("Error imporing "+model_id, e, e.details)})
+        }).catch((e) => {this.log.error("Error importing "+model_id, e, e.details)})
       })
     })
   }
@@ -265,3 +248,7 @@ export default class DataLoader {
   }
 
 }
+
+const dataManager = DataManager.getProxy()
+import {fixtures} from './modules/data-fixtures'
+export {DataManager as default, dataManager, fixtures}

@@ -1,7 +1,8 @@
+import {dataManager} from '../../'
 
 export default class JSONParser {
-  constructor(app) {
-    app.get('data-loader').parser('json', this.parse.bind(this))
+  constructor() {
+    dataManager.parser('json', this.parse.bind(this))
 
   }
 

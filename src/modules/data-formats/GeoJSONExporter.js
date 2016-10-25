@@ -1,8 +1,9 @@
 import _ from 'underscore'
+import {dataManager} from '../../'
 
 export default class GeoJSONExporter {
-  constructor(app) {
-    app.get('data-loader').exporter('geojson', this.export.bind(this))
+  constructor() {
+    dataManager.exporter('geojson', this.export.bind(this))
   }
 
   export(records, opts) {
