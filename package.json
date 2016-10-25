@@ -32,7 +32,7 @@
     "nxus-storage": "^4.0.0-0",
     "nxus-router": "^4.0.0-0",
     "terraformer-arcgis-parser": "^1.0.4",
-    "underscore": "^1.8.3",
+    "underscore": "^1.8.3"
   },
   "devDependencies": {
     "mocha": "^2.2.5",
