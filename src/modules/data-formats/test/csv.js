@@ -57,7 +57,6 @@ describe("CSV", () => {
     return module.import("csv", "A,B,C,D\n1,2,3,4\n").then((objs) => {
       module.emit.calledWith('records.csv').should.be.true
       module.emit.calledWith('record.csv').should.be.true
-      console.log(objs)
       objs[0].A.should.equal('111')
       objs[0].B.should.equal('21')
     })
