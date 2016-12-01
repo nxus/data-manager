@@ -63,13 +63,6 @@ class DataManager extends NxusModule {
    * @param {function} handler Function to receive (content, options) and return parsed array of result objects
    */
   parser(type, handler) {
-    //stub default handlers on "record" and "records" events
-    if((dataManager.listenerCount('records.'+type)) == 0) {
-      this.on('records.'+type, (args) => {return args})
-    }
-    if((dataManager.listenerCount('record.'+type)) == 0) {
-      this.on('record.'+type, (args) => {return args})
-    }
     this._parsers[type] = handler
   }
   /**
@@ -164,13 +157,6 @@ class DataManager extends NxusModule {
   // Internal
   
   _modelImport(model_id, results, opts) {
-    //stub default handlers on "model" and "models" events
-    if((dataManager.listenerCount('models.'+model_id)) == 0) {
-      this.on('models.'+model_id, (args) => {return args})
-    }
-    if((dataManager.listenerCount('model.'+model_id)) == 0) {
-      this.on('model.'+model_id, (args) => {return args})
-    }
     if (opts === undefined) opts = _defaultImportOptions
 
     if(typeof opts.strict != 'undefined' && opts.strict === false) {
