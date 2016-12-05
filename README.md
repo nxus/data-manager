@@ -1,32 +1,132 @@
-## nxus-data-loader
+## nxus-data-manager
 
-[src/index.js:43-183](https://github.com/nxus/data-loader/blob/79a319262520f3cc3d172a2bbee85cf802334a3a/src/index.js#L43-L183 "Source code on GitHub")
+### 
 
-Import file contents as arrays of objects
+Import file contents as arrays of objects. Includes parsers and exporters for:
 
-### Installation
+-   CSV / TSV
+-   JSON
+-   GeoJSON / ArcJSON
 
-> npm install @nxus/data-loader --save
+Provides convenience integration with `nxus-storage` to import and save to a storage model.
 
-### Options
+#### Installation
+
+> npm install nxus-data-manager --save
+
+#### Options
 
 All responses accept an options argument, in addition to any parser-specific options
 you can indicate:
 
 -   `mapping`: object of {field: newField} name mappings
 -   `identityFields`: for importing to models, array of fields to be used for createOrUpdate query
+-   `truncate`: for importing to models, true/false for deleting existing collection data before import. Ignored if `identityFields` is provided.
+-   `strict`: defaults to true. Only import columns/data that matches the attribute names for the model. Set to false to import everything.
 
-### Events
+#### Events
 
 You can modify the records during import with the following specific events:
 
--   `records.type`: e.g. `app.get('data-loader').after('records.csv', (results) => {})`
--   `record.type`: e.g. `app.get('data-loader).after('record.csv', (one) => {})`
--   `models.identity`: e.g. `app.get('data-loader').after('models.user', (results) => {})`
--   `model.identity`: e.g. `app.get('data-loader).after('model.user', (user) => {})`
+-   `records.type`: e.g. `dataManager.after('records.csv', (results) => {})`
+-   `record.type`: e.g. `dataManager.after('record.csv', (one) => {})`
+-   `models.identity`: e.g. `dataMangaer.after('models.user', (results) => {})`
+-   `model.identity`: e.g. `dataManager.after('model.user', (user) => {})`
 
 record_ events occur after parsing and name mapping
 model_ events occur after record events and before models are created/updated.
+
+### API
+
+* * *
+
+### parser
+
+Provide a parser for a particular type (file extension)
+
+**Parameters**
+
+-   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The type (e.g. 'html') this renderer should handle
+-   `handler` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Function to receive (content, options) and return parsed array of result objects
+
+### exporter
+
+Provide an exporter for a particular type (file extension)
+
+**Parameters**
+
+-   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The type (e.g. 'html') this exporter creates
+-   `handler` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Function to receive (content, options) and return formatted output content
+
+### export
+
+Request formattted output based on type
+
+**Parameters**
+
+-   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The type (e.g. 'html') of the output content
+-   `records` **\[[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)]** The records to export
+-   `opts` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options for the exporter context
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** String of formatted output
+
+### import
+
+Request parsed results based on type
+
+**Parameters**
+
+-   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The type (e.g. 'html') of the content
+-   `content` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The contents to parse
+-   `opts` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options for the parser context
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** Array of parsed result objects
+
+### importFile
+
+Request parsed results from a file path
+
+**Parameters**
+
+-   `filename` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The filename to read and parse
+-   `opts` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options for the parser context
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** Array of parsed result objects
+
+### importToModel
+
+Import string contents to a model
+
+**Parameters**
+
+-   `model` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The identity of the model to populate
+-   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The type (e.g. 'html') of the content
+-   `content` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The contents to parse
+-   `opts` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options for the parser context
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** Array of instances
+
+### importFileToModel
+
+Import file contents to a model
+
+**Parameters**
+
+-   `model` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The identity of the model to populate
+-   `filename` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The filename to read and parse
+-   `opts` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options for the parser context
+
+Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** Array of instances
+
+### fixture
+
+Import a data file as fixture data. Can specify environment option to only load for e.g. test
+
+**Parameters**
+
+-   `modelId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The identity of the model to import
+-   `path` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The path to a file
+-   `options` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options to pass to data-loader.importFile
 
 ## API
 
