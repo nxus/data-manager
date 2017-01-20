@@ -1,9 +1,15 @@
 /**
- * Import file contents as arrays of objects
+ * Import file contents as arrays of objects. Includes parsers and exporters for:
+ * 
+ *  * CSV / TSV
+ *  * JSON
+ *  * GeoJSON / ArcJSON
+ * 
+ * Provides convenience integration with `nxus-storage` to import and save to a storage model.
  * 
  * ## Installation
  *
- *    > npm install nxus-data-loader --save
+ *    > npm install nxus-data-manager --save
  *
  * ## Options
  *
@@ -17,10 +23,10 @@
  * ## Events
  *
  * You can modify the records during import with the following specific events:
- *  * `records.type`: e.g. `app.get('data-loader').after('records.csv', (results) => {})`
- *  * `record.type`: e.g. `app.get('data-loader).after('record.csv', (one) => {})`
- *  * `models.identity`: e.g. `app.get('data-loader').after('models.user', (results) => {})`
- *  * `model.identity`: e.g. `app.get('data-loader).after('model.user', (user) => {})`
+ *  * `records.type`: e.g. `dataManager.after('records.csv', (results) => {})`
+ *  * `record.type`: e.g. `dataManager.after('record.csv', (one) => {})`
+ *  * `models.identity`: e.g. `dataMangaer.after('models.user', (results) => {})`
+ *  * `model.identity`: e.g. `dataManager.after('model.user', (user) => {})`
  *
  * record* events occur after parsing and name mapping
  * model* events occur after record events and before models are created/updated.
@@ -217,7 +223,8 @@ class DataManager extends NxusModule {
     })
   }
 
-  /**
+  /** 
+   * @private
    * Simple do-storage function
    * to help mock up storage for tests, other applications.
    * @param  {[type]} model          [description]
