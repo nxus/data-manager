@@ -27,7 +27,6 @@ export default class CSVParser {
             if(h && h.length > 0 && row[i] && row[i] != '') newRow[h] = row[i]
           })
           if(_.compact(_.values(newRow)).length == 0) return null
-          console.log(newRow)
           return newRow
         }))
         resolve(results)
