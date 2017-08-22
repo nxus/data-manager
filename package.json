@@ -26,11 +26,12 @@
     "bluebird": "^3.3.3",
     "csv-parse": "^1.0.2",
     "csv-stringify": "^1.0.2",
+    "fast-csv": "^2.4.0",
     "morph": "^0.2.0",
     "multer": "^1.1.0",
     "nxus-core": "^4.0.0-2",
-    "nxus-storage": "^4.0.0-0",
     "nxus-router": "^4.0.0-0",
+    "nxus-storage": "^4.0.0-0",
     "terraformer-arcgis-parser": "^1.0.4",
     "underscore": "^1.8.3"
   },
