@@ -1,6 +1,6 @@
 {
   "name": "nxus-data-manager",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "Data format parsers and loaders for nxus",
   "main": "lib",
   "scripts": {
