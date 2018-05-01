@@ -19,6 +19,7 @@
  *  * `identityFields`: for importing to models, array of fields to be used for createOrUpdate query
  *  * `truncate`: for importing to models, true/false for deleting existing collection data before import. Ignored if `identityFields` is provided.
  *  * `strict`: defaults to true. Only import columns/data that matches the attribute names for the model. Set to false to import everything.
+ *  * `endOnError`: defaults to true. Will end the import if any record is invalid or can't be saved. The original error will be thrown. Set to false to continue loading other recoreds.
  * 
  * ## Events
  *
@@ -53,7 +54,8 @@ Promise.promisifyAll(fs)
 const _defaultImportOptions = {
   truncate: true,
   identityFields: [],
-  strict: true
+  strict: true,
+  endOnError: true
 }
 
 class DataManager extends NxusModule {
@@ -195,7 +197,10 @@ class DataManager extends NxusModule {
               } else {
                 action = this._storeResultsWithModel(model, values)
               }
-              return action
+              if(opts.endOnError)
+                return action
+              else
+                return action.catch((e) => {this.log.error("Error importing "+model_id, e, e.details)})
             })
           }
           

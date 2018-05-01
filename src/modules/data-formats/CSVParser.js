@@ -14,12 +14,13 @@ export default class CSVParser {
 
   parse(delimiter, contents, opts) {
     var delimiter = opts.delimiter || delimiter
-    var parser = csv.fromString(contents, {delimiter: delimiter, trim: true, skip_empty_lines: true})
+    var parser = csv.fromString(contents, Object.assign(opts, {delimiter: delimiter, trim: true, skip_empty_lines: true}))
     return new Promise((resolve, reject) => {
       var results = []
       var header = null
       var completed = false
       parser.on('data', (row) => {
+        if(opts.raw) return results.push(row)
         if(!header) {
           header = row;
         } else {

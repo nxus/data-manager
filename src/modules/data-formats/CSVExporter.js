@@ -15,10 +15,9 @@ export default class CSVExporter {
 
   export(delimiter, records, opts) {
     opts.delimiter = opts.delimiter || delimiter
-    if (!opts.header) {
+    if (typeof opts.header == 'undefined') {
       opts.header = true
     }
     return stringifier(records, opts)
-  }
-  
+  } 
 }
