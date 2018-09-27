@@ -7,6 +7,8 @@ import GeoJSONParser from './GeoJSONParser'
 import GeoJSONExporter from './GeoJSONExporter'
 import JSONParser from './JSONParser'
 import JSONExporter from './JSONExporter'
+import XLSParser from './XLSParser'
+import XLSExporter from './XLSExporter'
 
 export default class DataManagerFormats extends NxusModule {
   constructor() {
@@ -18,6 +20,8 @@ export default class DataManagerFormats extends NxusModule {
     new GeoJSONExporter()
     new JSONParser()
     new JSONExporter()
+    new XLSParser()
+    new XLSExporter()
     
   }
 }
