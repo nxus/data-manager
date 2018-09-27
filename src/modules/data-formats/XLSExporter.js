@@ -10,10 +10,10 @@ export default class XLSExporter {
 
   /*
    * @param {Array}  records
-   * @param {Object} opts  {sheetName: 'Sheet1'}
+   * @param {Object} opts  {sheetName: 'Sheet1', headers: []}
    */
   export(records, opts) {
-    let columnNames = opts.columnNames || Object.keys(records[0])
+    let columnNames = opts.headers || Object.keys(records[0])
     let rows = records.map((x) => {
       let val = []
       for (let n of columnNames) {

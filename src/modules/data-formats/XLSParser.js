@@ -9,7 +9,7 @@ export default class XLSParser {
 
   /*
    * @param {string} contents
-   * @param {Object} opts  {sheetIndex: 0, headerRows: 0}
+   * @param {Object} opts  {sheetIndex: 0, headerRowCount: 0, headers: []}
    */
   
   async parse(contents, opts={}) {
@@ -20,12 +20,13 @@ export default class XLSParser {
       throw new Error('Could not read workbook: ' + e.message)
     }
 
-    let headingRow = sheet.limits.firstRow + (opts.headerRows || 0),
+    let headingRow = sheet.limits.firstRow + (opts.headerRowCount || 0),
         firstDataRow = headingRow + 1,
         columnPositions = {}
 
+    let headers = opts.headers || []
     for (let col = sheet.limits.firstCol, lim = sheet.limits.lastCol; col <= lim; col += 1) {
-      let key = sheet.cell([col, headingRow])
+      let key = (headers.length > 0) ? headers.shift() : sheet.cell([col, headingRow])
       if (key) columnPositions[key] = col
     }
 
