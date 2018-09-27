@@ -126,7 +126,6 @@ class DataManager extends NxusModule {
    */
   importFile(filename, opts) {
     return fs.readFileAsync(filename).then((content) => {
-      content = content.toString()
       var type = path.extname(filename).replace(".", "")
       if (opts && opts.type) {
         type = opts.type
