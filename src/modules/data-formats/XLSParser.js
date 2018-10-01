@@ -7,7 +7,8 @@ export default class XLSParser {
     dataManager.parser('xlsx', this.parse.bind(this))
   }
 
-  /*
+  /** Parse XLS(X) files
+   * 
    * @param {string} contents
    * @param {Object} opts  {sheetIndex: 0, headerRowCount: 0, headers: []}
    */
@@ -60,10 +61,6 @@ export default class XLSParser {
 
 
 
-/** Spreadsheet class.
- * Adds some useful methods to spreadsheet produced by XLSX. Also
- * performs a tighter calculation of the spreadsheet limits.
- */
 class Sheet {
   constructor(props) {
     Object.assign(this, props)
@@ -113,7 +110,7 @@ class Sheet {
     return c && c.v
   }
 
-  /** Parses A1-style spreadsheet cell reference.
+  /* Parses A1-style spreadsheet cell reference.
    * @param {string} key - cell reference
    * @return {Array} two-element array containing column and row indexes
    *   (both zero-based)
@@ -129,7 +126,7 @@ class Sheet {
     return pos
   }
 
-  /** Formats A1-style spreadsheet cell reference.
+  /* Formats A1-style spreadsheet cell reference.
    * @param {Array} pos - two-element array containing column and row
    *   indexes (both zero-based)
    * @return {string} cell reference

@@ -4,6 +4,7 @@
  *  * CSV / TSV
  *  * JSON
  *  * GeoJSON / ArcJSON
+ *  * XLS / XLSX
  * 
  * Provides convenience integration with `nxus-storage` to import and save to a storage model.
  * 

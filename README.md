@@ -9,6 +9,7 @@ Import file contents as arrays of objects. Includes parsers and exporters for:
 -   CSV / TSV
 -   JSON
 -   GeoJSON / ArcJSON
+-   XLS / XLSX
 
 Provides convenience integration with `nxus-storage` to import and save to a storage model.
 
@@ -25,6 +26,7 @@ you can indicate:
 -   `identityFields`: for importing to models, array of fields to be used for createOrUpdate query
 -   `truncate`: for importing to models, true/false for deleting existing collection data before import. Ignored if `identityFields` is provided.
 -   `strict`: defaults to true. Only import columns/data that matches the attribute names for the model. Set to false to import everything.
+-   `endOnError`: defaults to true. Will end the import if any record is invalid or can't be saved. The original error will be thrown. Set to false to continue loading other recoreds.
 
 #### Events
 
@@ -48,8 +50,8 @@ Provide a parser for a particular type (file extension)
 
 **Parameters**
 
--   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The type (e.g. 'html') this renderer should handle
--   `handler` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Function to receive (content, options) and return parsed array of result objects
+-   `type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The type (e.g. 'html') this renderer should handle
+-   `handler` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Function to receive (content, options) and return parsed array of result objects
 
 #### exporter
 
@@ -57,8 +59,8 @@ Provide an exporter for a particular type (file extension)
 
 **Parameters**
 
--   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The type (e.g. 'html') this exporter creates
--   `handler` **[function](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/function)** Function to receive (content, options) and return formatted output content
+-   `type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The type (e.g. 'html') this exporter creates
+-   `handler` **[function](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Statements/function)** Function to receive (content, options) and return formatted output content
 
 #### export
 
@@ -66,11 +68,11 @@ Request formattted output based on type
 
 **Parameters**
 
--   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The type (e.g. 'html') of the output content
--   `records` **\[[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)]** The records to export
--   `opts` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options for the exporter context
+-   `type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The type (e.g. 'html') of the output content
+-   `records` **\[[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)]** The records to export
+-   `opts` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options for the exporter context
 
-Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** String of formatted output
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)** String of formatted output
 
 #### import
 
@@ -78,11 +80,11 @@ Request parsed results based on type
 
 **Parameters**
 
--   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The type (e.g. 'html') of the content
--   `content` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The contents to parse
--   `opts` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options for the parser context
+-   `type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The type (e.g. 'html') of the content
+-   `content` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The contents to parse
+-   `opts` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options for the parser context
 
-Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** Array of parsed result objects
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)** Array of parsed result objects
 
 #### importFile
 
@@ -90,10 +92,10 @@ Request parsed results from a file path
 
 **Parameters**
 
--   `filename` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The filename to read and parse
--   `opts` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options for the parser context
+-   `filename` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The filename to read and parse
+-   `opts` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options for the parser context
 
-Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** Array of parsed result objects
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)** Array of parsed result objects
 
 #### importToModel
 
@@ -101,12 +103,12 @@ Import string contents to a model
 
 **Parameters**
 
--   `model` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The identity of the model to populate
--   `type` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The type (e.g. 'html') of the content
--   `content` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The contents to parse
--   `opts` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options for the parser context
+-   `model` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The identity of the model to populate
+-   `type` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The type (e.g. 'html') of the content
+-   `content` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The contents to parse
+-   `opts` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options for the parser context
 
-Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** Array of instances
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)** Array of instances
 
 #### importFileToModel
 
@@ -114,11 +116,11 @@ Import file contents to a model
 
 **Parameters**
 
--   `model` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The identity of the model to populate
--   `filename` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The filename to read and parse
--   `opts` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options for the parser context
+-   `model` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The identity of the model to populate
+-   `filename` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The filename to read and parse
+-   `opts` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options for the parser context
 
-Returns **[Promise](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise)** Array of instances
+Returns **[Promise](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Promise)** Array of instances
 
 #### fixture
 
@@ -126,9 +128,40 @@ Import a data file as fixture data. Can specify environment option to only load 
 
 **Parameters**
 
--   `modelId` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The identity of the model to import
--   `path` **[string](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String)** The path to a file
--   `options` **[object](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options to pass to data-loader.importFile
+-   `modelId` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The identity of the model to import
+-   `path` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** The path to a file
+-   `options` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** Options to pass to data-loader.importFile
+
+#### export
+
+Stringify an array of results into JSON. Assumes top-level is array, unless
+ opts.key is provided to wrap results in an object.
+
+**Parameters**
+
+-   `records` **[array](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Array)** 
+-   `opts`  
+-   `options` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
+#### parse
+
+Parse JSON into an array of results. Assumes top-level is array, unless
+ opts.key is provided to pick a top-level key from parsed object as results.
+
+**Parameters**
+
+-   `contents` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `opts`  
+-   `options` **[object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** 
+
+#### parse
+
+Parse XLS(X) files
+
+**Parameters**
+
+-   `contents` **[string](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/String)** 
+-   `opts` **[Object](https://developer.mozilla.org/docs/Web/JavaScript/Reference/Global_Objects/Object)** {sheetIndex: 0, headerRowCount: 0, headers: \[]} (optional, default `{}`)
 
 ## API
 
