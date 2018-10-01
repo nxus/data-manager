@@ -4,6 +4,7 @@
  *  * CSV / TSV
  *  * JSON
  *  * GeoJSON / ArcJSON
+ *  * XLS / XLSX
  * 
  * Provides convenience integration with `nxus-storage` to import and save to a storage model.
  * 
@@ -126,7 +127,6 @@ class DataManager extends NxusModule {
    */
   importFile(filename, opts) {
     return fs.readFileAsync(filename).then((content) => {
-      content = content.toString()
       var type = path.extname(filename).replace(".", "")
       if (opts && opts.type) {
         type = opts.type

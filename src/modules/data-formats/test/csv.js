@@ -13,6 +13,7 @@ function testAddOneRowHandler(row) {
   })
 }
 
+var dataFileName = __dirname+"/data/simple.csv"
 var addOneRowHandlerSpy = Sinon.spy(testAddOneRowHandler)
 
 
@@ -31,6 +32,13 @@ describe("CSV", () => {
       objs.length.should.equal(1)
       objs[0].should.have.property("A", "1")
       objs[0].should.have.property("B", "2")
+    })
+  })
+  it("should parse from file", () => {
+    return module.importFile(dataFileName).then((objs) => {
+      objs.length.should.equal(2)
+      objs[0].should.have.property("a", "1")
+      objs[0].should.have.property("b", "2")
     })
   })
   it("should export", () => {
